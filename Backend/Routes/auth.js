@@ -32,7 +32,7 @@ const sendVeryfyMAil = async (name, email, user_id) => {
       html:
         "<p>Hii " +
         name +
-        ' please click here to <a href= "http://127.0.0.1:3000/verify?id=' +
+        ' please click here to <a href= "http://localhost:5000/verify?id=' +
         user_id +
         '"> Verify </a> Your mail.</p>',
     };
@@ -49,6 +49,16 @@ const sendVeryfyMAil = async (name, email, user_id) => {
 };
 const verifyMail = async (req, res) => {
   try {
+    const userId = req.query.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({ message: "Email already verified" });
+    }
+
     const updateInfo = await User.updateOne(
       { _id: req.query.id },
       { $set: { verified: true } }

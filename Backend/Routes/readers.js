@@ -62,10 +62,25 @@ router.get("/browse-books", authenticateUser, async (req, res) => {
     const startIndex = (pageNumber - 1) * limitPerPage;
 
     // Fetch books based on the constructed query, apply sorting and pagination
-    const books = await Books.find(query)
+    let books = await Books.find(query)
       .sort(sortOptions)
       .limit(limitPerPage)
-      .skip(startIndex);
+      .skip(startIndex)
+      .populate("author", "name"); // Populate author details
+
+    // If topRated is true, aggregate average ratings from Reviews collection
+    if (topRated === "true") {
+      let topRatedBooks = await Reviews.aggregate([
+        { $group: { _id: "$book", avgRating: { $avg: "$rating" } } },
+        { $match: { avgRating: { $gte: 4 } } },
+      ]);
+
+      // Extract book ids from topRatedBooks
+      const topRatedBookIds = topRatedBooks.map((review) => review._id);
+
+      // Filter books based on top-rated book ids
+      books = books.filter((book) => topRatedBookIds.includes(book._id));
+    }
 
     res.json({ books });
   } catch (error) {

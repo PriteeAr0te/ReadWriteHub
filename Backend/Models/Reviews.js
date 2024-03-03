@@ -5,17 +5,14 @@ const reviewsSchema = new Schema({
   book: {
     type: Schema.Types.ObjectId,
     ref: "book",
-    required: true,
   },
   author: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
   },
   reader: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
-    required: true,
   },
   rating: {
     type: Number,

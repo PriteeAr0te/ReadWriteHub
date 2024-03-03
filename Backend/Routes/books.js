@@ -53,7 +53,7 @@ router.post(
         price,
         tags,
         isPublished,
-        user: req.user.id,
+        author: req.user.id,
       });
       const saveBook = await book.save();
       res.json({ success: true, book });
@@ -132,7 +132,7 @@ router.put(
         return res.status(500).json({ error: "not found" });
       }
 
-      if (book.user.toString() !== req.user.id) {
+      if (book.user && book.user.toString() !== req.user.id) {
         return res
           .status(401)
           .json({ error: "Not authorized to edit this book" });
@@ -165,7 +165,7 @@ router.delete("/deletebook/:id", authenticateUser, async (req, res) => {
     }
 
     //Allow deletion only if author owns this book
-    if (book.user.toString() !== req.user.id) {
+    if (book.user && book.user.toString() !== req.user.id) {
       return res.status(401).send("Not Allowed to delete the book");
     }
     book = await Books.findByIdAndDelete(req.params.id);

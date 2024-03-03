@@ -32,7 +32,7 @@ const sendVeryfyMAil = async (name, email, user_id) => {
       html:
         "<p>Hii " +
         name +
-        ' please click here to <a href= "http://localhost:5000/verify?id=' +
+        ' please click here to <a href= "http://localhost:3000/verify?id=' +
         user_id +
         '"> Verify </a> Your mail.</p>',
     };
@@ -47,6 +47,8 @@ const sendVeryfyMAil = async (name, email, user_id) => {
     console.log(error.message);
   }
 };
+
+//varify mail and redirect
 const verifyMail = async (req, res) => {
   try {
     const userId = req.query.id;
@@ -64,9 +66,16 @@ const verifyMail = async (req, res) => {
       { $set: { verified: true } }
     );
     console.log(updateInfo);
-    res.render("emailVerified");
+
+    // Send a response to redirect the user to the home page
+    if (user.userType === "author") {
+      res.redirect("/author");
+    } else if (user.userType === "reader") {
+      res.redirect("/reader");
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -165,6 +174,7 @@ router.post(
         },
       };
       const authtoken = jwt.sign(data, JWT_SECRET);
+
       return res.json({ authtoken: authtoken, msg: "Login Successfull" });
     } catch (error) {
       console.log(error.message);

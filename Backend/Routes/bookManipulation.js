@@ -26,7 +26,7 @@ router.get("/filterbooks", authenticateUser, async (req, res) => {
     const startIndex = (pageNumber - 1) * limitPerPage;
     const endIndex = pageNumber * limitPerPage;
 
-    const books = await Books.find({ query })
+    const books = await Books.find(query)
       .sort(sortOptions)
       .limit(limitPerPage)
       .skip(startIndex);

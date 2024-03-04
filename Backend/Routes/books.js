@@ -1,30 +1,47 @@
 const express = require("express");
 const authenticateUser = require("../middleware/authentication");
 const Books = require("../Models/Books");
+const path = require("path");
 const { body, validationResult } = require("express-validator");
 const router = express.Router();
+// const multer = require("multer");
+// const upload = multer({ dest: "uploads/" });
 
-//Route1 : Add a new Book
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads");
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     cb(null, file.fieldname + "-" + uniqueSuffix);
+//   },
+// });
 
 router.post(
   "/addbook",
-  authenticateUser,
   [
-    body("cover")
-      .notEmpty()
-      .withMessage("Cover URL is required")
-      .isURL()
-      .withMessage("Please enter valid URL"),
     body("title").isLength({ min: 3 }).withMessage("Enter valid Title"),
     body("description")
       .isLength({ min: 5 })
-      .withMessage("Description should be greater that 5 characters"),
+      .withMessage("Description should be greater than 5 characters"),
     body("genre").notEmpty().withMessage("Genre is required"),
   ],
+  authenticateUser,
   async (req, res) => {
+    console.log(req.body, 49);
+    console.log(req.file, 50);
+    console.log("Auth: ", req.headers.authorization);
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      console.log(req.file);
+      if (!req.file) {
+        return res.status(400).json({ error: "Please upload a file" });
+      }
+
       const {
-        cover,
         title,
         description,
         genre,
@@ -33,26 +50,25 @@ router.post(
         tags,
         isPublished,
       } = req.body;
+      const imageUrl = req.file.path;
+      console.log("cover: ", imageUrl);
 
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-      const book = new Books({
-        cover,
-        title,
-        description,
-        genre,
-        publish_date,
-        price,
-        tags,
-        isPublished,
+      let book = new Books({
+        cover: imageUrl,
+        title: title,
+        description: description,
+        genre: genre,
+        publish_date: publish_date,
+        price: price,
+        tags: tags,
+        isPublished: isPublished,
         author: req.user.id,
       });
-      const saveBook = await book.save();
-      res.json({ success: true, book });
+
+      book = await book.save();
+      res.json({ book });
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       return res.status(500).json("Internal Server Error");
     }
   }
@@ -92,6 +108,10 @@ router.put(
       tags,
       isPublished,
     } = req.body;
+
+    if (!cover) {
+      return res.status(400).json({ msg: "Please enter an icon url" });
+    }
 
     try {
       const newBook = {};

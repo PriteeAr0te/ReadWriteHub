@@ -1,71 +1,77 @@
 import React, { useContext, useState } from "react";
+import axios from "axios";
 import BookContext from "../Context/Books/BookContext";
 
 const AddBook = () => {
+  const [image, setImage] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [genre, setGenre] = useState("");
+  const [publish_date, setPublish_date] = useState("");
+  const [price, setPrice] = useState(0);
+  const [tags, setTags] = useState([]);
+  const [isPublished, setIsPublished] = useState([]);
+
+  console.log(image, 12);
+
+  const [error, setError] = useState("");
   const context = useContext(BookContext);
   const { addBook } = context;
-  const [book, setBook] = useState({
-    cover: "",
-    title: "",
-    description: "",
-    genre: "",
-    publish_date: "",
-    price: "",
-    tags: [],
-    isPublished: false,
-  });
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const price = parseFloat(book.price);
-    const publishDate = new Date(book.publish_date).toISOString();
-    addBook(
-      book.cover,
-      book.title,
-      book.description,
-      book.genre,
-      publishDate,
-      price,
-      book.tags,
-      book.isPublished
-    );
-    setBook({
-      cover: "",
-      title: "",
-      description: "",
-      genre: "",
-      publish_date: "",
-      price: "",
-      tags: [],
-      isPublished: false,
-    });
-    alert("New Book Added", "success");
-  };
+    try {
+      let imageUrl = "";
+      const formData = new FormData();
+      formData.append("cover", image);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("genre", genre);
+      formData.append("publish_date", publish_date);
+      formData.append("price", price);
+      formData.append("tags", tags);
+      formData.append("isPublished", isPublished);
+      // formData.append("upload_preset", "readwritehubimage");
 
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "tags") {
-      const tagsArray = value.split(",").map((tag) => tag.trim());
-      setBook({
-        ...book,
-        [name]: tagsArray,
-      });
-    } else if (name === "price") {
-      setBook({
-        ...book,
-        [name]: value.replace(/\D/g, ""),
-      });
-    } else {
-      setBook({
-        ...book,
-        [name]: value,
-      });
+      const dataRes = await axios
+        .post("http://localhost:5000/api/books/addbook", formData, {
+          headers: { Authorization: localStorage.getItem("token") },
+          "Content-Type": "multipart/form-data",
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+      imageUrl = dataRes.data.book.cover;
+
+      const bookData = {
+        ...(image ? { cover: imageUrl } : {}),
+        title: title,
+        description: description,
+        genre: genre,
+        publish_date: publish_date,
+        price: price,
+        tags: tags,
+        isPublished: isPublished,
+      };
+
+      const response = await addBook(bookData);
+
+      if (response && response.data && response.data.book) {
+        const imageUrl = response.data.book.cover;
+        console.log("imageUrl: ", imageUrl);
+        alert("New Book Added", "success");
+      } else {
+        alert("Failed to add book", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to add book");
     }
   };
 
   const handleRadioChange = (e) => {
     const { value } = e.target;
-    setBook({ ...book, isPublished: value === "true" });
+    setIsPublished(value === "true");
   };
 
   return (
@@ -78,13 +84,13 @@ const AddBook = () => {
             Cover
           </label>
           <input
-            type="text"
+            type="file"
+            accept="image/*"
             className="form-control my-2"
             id="cover"
-            value={book.cover}
             name="cover"
             aria-describedby="cover"
-            onChange={onChange}
+            onChange={(e) => setImage(e.target.files[0])}
             required
           />
         </div>
@@ -97,10 +103,10 @@ const AddBook = () => {
             type="text"
             className="form-control my-2"
             id="title"
-            value={book.title}
+            value={title}
             name="title"
             aria-describedby="title"
-            onChange={onChange}
+            onChange={(e) => setTitle(e.target.value)}
             required
           />
         </div>
@@ -112,9 +118,9 @@ const AddBook = () => {
             type="text"
             className="form-control my-2"
             id="description"
-            value={book.description}
+            value={description}
             name="description"
-            onChange={onChange}
+            onChange={(e) => setDescription(e.target.value)}
             required
           />
         </div>
@@ -127,10 +133,10 @@ const AddBook = () => {
             type="text"
             className="form-control my-2"
             id="genre"
-            value={book.genre}
+            value={genre}
             name="genre"
             aria-describedby="genre"
-            onChange={onChange}
+            onChange={(e) => setGenre(e.target.value)}
             required
           />
         </div>
@@ -143,10 +149,10 @@ const AddBook = () => {
             type="text"
             className="form-control my-2"
             id="price"
-            value={book.price}
+            value={price}
             name="price"
             aria-describedby="price"
-            onChange={onChange}
+            onChange={(e) => setPrice(e.target.value)}
             required
           />
         </div>
@@ -159,10 +165,10 @@ const AddBook = () => {
             type="date"
             className="form-control my-2"
             id="publish_date"
-            value={book.publish_date}
+            value={publish_date}
             name="publish_date"
             aria-describedby="date"
-            onChange={onChange}
+            onChange={(e) => setPublish_date(e.target.value)}
             required
           />
         </div>
@@ -173,7 +179,7 @@ const AddBook = () => {
             name="isPublished"
             id="trueRadio"
             value={true}
-            checked={book.isPublished}
+            checked={isPublished}
             onChange={handleRadioChange}
           />
           <label className="form-check-label" htmlFor="trueRadio">
@@ -187,7 +193,7 @@ const AddBook = () => {
             name="isPublished"
             id="falseRadio"
             value={false}
-            checked={!book.isPublished}
+            checked={!isPublished}
             onChange={handleRadioChange}
           />
           <label className="form-check-label" htmlFor="falseRadio">
@@ -203,16 +209,18 @@ const AddBook = () => {
             type="text"
             className="form-control my-2"
             id="tags"
-            value={book.tags.join(",")}
+            value={tags.join(",")}
             name="tags"
             aria-describedby="tags"
-            onChange={onChange}
+            onChange={(e) =>
+              setTags(e.target.value.split(",").map((tag) => tag.trim()))
+            }
             required
           />
         </div>
         <div className="w-full flex justify-center items-center">
           <button
-            disabled={book.title.length < 5 || book.description.length < 5}
+            disabled={title.length < 5 || description.length < 5}
             type="submit"
             className="btn btn-primary px-2 my-2 p-1 m-1"
           >

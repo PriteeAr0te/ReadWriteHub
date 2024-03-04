@@ -134,6 +134,7 @@ const Register = () => {
             id="password"
             onChange={onChange}
             placeholder="Password"
+            autocomplete="new-password"
             required
           />
         </Form.Group>

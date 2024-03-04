@@ -31,7 +31,7 @@ const BookList = () => {
                   {book.title}
                 </h1>
                 <p className="text-sm tracking-tighter">{book.description}</p>
-                {/* <p className="text-sm font-semibold">By {book.author}</p> */}
+                <p className="text-sm font-semibold">By {book.author}</p>
                 <p className="text-2xl font-semibold">${book.price}</p>
                 <p className="text-xs uppercase tracking-wide">{book.genre}</p>
                 <p className="text-xs uppercase tracking-wide">

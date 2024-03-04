@@ -9,17 +9,15 @@ const AddBook = () => {
     title: "",
     description: "",
     genre: "",
-    publish_date: "", // Change this line
-    price: "", // Change this line
-    tags: [], // Change this line
+    publish_date: "",
+    price: "",
+    tags: [],
     isPublished: false,
   });
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    // Convert price to a number
     const price = parseFloat(book.price);
-    // Format date if necessary (check the format expected by the backend)
     const publishDate = new Date(book.publish_date).toISOString();
     addBook(
       book.cover,
@@ -28,7 +26,7 @@ const AddBook = () => {
       book.genre,
       publishDate,
       price,
-      book.tags, // Change this line
+      book.tags,
       book.isPublished
     );
     setBook({
@@ -36,9 +34,9 @@ const AddBook = () => {
       title: "",
       description: "",
       genre: "",
-      publish_date: "", // Change this line
-      price: "", // Change this line
-      tags: [], // Change this line
+      publish_date: "",
+      price: "",
+      tags: [],
       isPublished: false,
     });
     alert("New Book Added", "success");
@@ -47,7 +45,6 @@ const AddBook = () => {
   const onChange = (e) => {
     const { name, value } = e.target;
     if (name === "tags") {
-      // Split the comma-separated string into an array of tags
       const tagsArray = value.split(",").map((tag) => tag.trim());
       setBook({
         ...book,

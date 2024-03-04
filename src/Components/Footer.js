@@ -17,18 +17,18 @@ const Footer = () => {
           >
             Home
           </Link>
-          <a
+          <Link
             className="text-sm font-medium text-gray-50 no-underline pr-3 hover:underline dark:text-gray-950 dark:hover:underline"
-            href="#"
+            to="/reader"
           >
-            About
-          </a>
-          <a
+            Reader
+          </Link>
+          <Link
             className="text-sm font-medium text-gray-50 no-underline pr-3 hover:underline dark:text-gray-950 dark:hover:underline"
-            href="#"
+            to="/author"
           >
-            Contact
-          </a>
+            Author
+          </Link>
         </nav>
         <div className="flex items-center justify-center gap-4 md:gap-8">
           <a

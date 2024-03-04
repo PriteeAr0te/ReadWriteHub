@@ -8,15 +8,30 @@ const BookState = (props) => {
 
   //fetch all books
   const fetchBooks = async () => {
-    const response = await fetch(`${BASE_URL}/api/books/fetchallbooks`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
-      },
-    });
-    const json = await response.json();
-    setBooks(json);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${BASE_URL}/api/books/fetchallbooks`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch books");
+      }
+
+      const json = await response.json();
+      setBooks(json);
+      console.log("Books", json);
+    } catch (error) {
+      console.error("Fetch Error:", error);
+    }
   };
 
   //add Book
@@ -34,8 +49,9 @@ const BookState = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        Authorization: localStorage.getItem("token"),
       },
+
       body: JSON.stringify({
         cover,
         title,
@@ -47,7 +63,9 @@ const BookState = (props) => {
         isPublished,
       }),
     });
+    console.log(localStorage.getItem("token"));
     const book = await response.json();
+    console.log(book);
     setBooks(books.concat(book));
   };
 
@@ -57,7 +75,7 @@ const BookState = (props) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        Authorization: localStorage.getItem("token"),
       },
     });
     const json = await response.json();
@@ -84,7 +102,7 @@ const BookState = (props) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("token"),
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify({
         cover,

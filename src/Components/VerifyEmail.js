@@ -1,29 +1,26 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const VerifyEmail = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const userId = searchParams.get("id");
+    const userType = searchParams.get("userType");
 
-    const verifyEmail = async () => {
-      try {
-        const response = await fetch(`/api/auth/verify?id=${userId}`);
-        if (response.ok) {
-          console.log("Email verified successfully!");
-          window.location.href = "/";
-        } else {
-          console.error("Failed to verify email");
-        }
-      } catch (error) {
-        console.error("Error verifying email:", error);
+    const handleRedirection = () => {
+      if (userType === "reader") {
+        navigate("/reader");
+      } else if (userType === "author") {
+        navigate("/author");
+      } else {
+        navigate("/login");
       }
     };
 
-    verifyEmail();
-  }, [location.search]);
+    handleRedirection();
+  }, [location.search, navigate]);
 
   return (
     <div>

@@ -20,12 +20,6 @@ router.post(
       .isLength({ min: 5 })
       .withMessage("Description should be greater that 5 characters"),
     body("genre").notEmpty().withMessage("Genre is required"),
-    body("publish_date").isISO8601().withMessage("Invalid Date Format"),
-    body("price").isNumeric().withMessage("Price must be numeric"),
-    body("tags").isArray().withMessage("Tags should be an array"),
-    body("isPublished")
-      .isBoolean()
-      .withMessage("isPublished must be a boolean"),
   ],
   async (req, res) => {
     try {
@@ -182,11 +176,9 @@ router.delete("/deletebook/:id", authenticateUser, async (req, res) => {
 //ROUTE 4: fetch all books : GET "/api/books/fetchallbooks" . login required
 router.get("/fetchallbooks", authenticateUser, async (req, res) => {
   try {
-    const publishedBooks = await Books.find({ isPublished: true }).populate(
-      "author",
-      "name"
-    );
-    res.json(publishedBooks);
+    const books = await Books.find().populate("author", "-_id name");
+    res.json(books);
+    console.log("P:", books);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, error: "Internal server error" });

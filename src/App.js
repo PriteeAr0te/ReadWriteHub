@@ -10,13 +10,15 @@ import VerifyEmail from "./Components/VerifyEmail";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Author from "./Components/Author";
 import Reader from "./Components/Reader";
+import { useState } from "react";
 
 function App() {
+  const [userType, setUserType] = useState("reader");
   return (
     <>
       <BookState>
         <BrowserRouter>
-          <Navbar />
+          <Navbar userType={userType} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />

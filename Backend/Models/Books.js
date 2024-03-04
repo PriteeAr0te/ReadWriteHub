@@ -7,7 +7,7 @@ const bookSchema = new Schema({
     ref: "user",
   },
   cover: {
-    type: String,
+    type: mongoose.Schema.Types.String,
     required: true,
   },
   title: {
@@ -25,7 +25,6 @@ const bookSchema = new Schema({
   },
   publish_date: {
     type: Date,
-    required: true,
   },
   price: {
     type: Number,

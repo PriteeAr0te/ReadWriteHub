@@ -7,7 +7,7 @@ const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
   // replacing useHistory hook in v5 with useNavigate
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +23,15 @@ const Login = () => {
         }),
       });
       const json = await response.json();
-      // console.log(json)
-      if (json) {
-        //redirect
+      console.log("JSON: ", json);
+      if (json.authtoken) {
+        // Store token in local storage
         localStorage.setItem("token", json.authtoken);
-        alert("Login Successfully", "success");
-        navigate("/");
+
+        // Redirect based on user type
+        redirectToDashboard(json.user.userType);
       } else {
-        alert("Invalid Username or Password", "danger");
+        alert(json.msg || "Invalid Username or Password", "danger");
       }
     } catch (error) {
       console.error(error);
@@ -39,6 +40,16 @@ const Login = () => {
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
+  const redirectToDashboard = (userType) => {
+    if (userType === "reader") {
+      navigate("/reader");
+    } else if (userType === "author") {
+      navigate("/author");
+    } else {
+      navigate("/login");
+    }
   };
 
   return (

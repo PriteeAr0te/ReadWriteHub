@@ -67,12 +67,14 @@ const verifyMail = async (req, res) => {
     );
     console.log(updateInfo);
 
-    // Send a response to redirect the user to the home page
-    if (user.userType === "author") {
-      res.redirect("/author");
-    } else if (user.userType === "reader") {
-      res.redirect("/reader");
-    }
+    // Send a response to redirect the user to the desired page accordint to the userType
+      if (user.userType === "reader") {
+        return res.redirect("/verify?userType=reader");
+      } else if (user.userType === "author") {
+        return res.redirect("/verify?userType=author");
+      } else {
+        return res.redirect("/verify?userType=login");
+      }
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: "Internal server error" });
@@ -173,9 +175,14 @@ router.post(
           userType: user.userType,
         },
       };
+      console.log(data);
       const authtoken = jwt.sign(data, JWT_SECRET);
 
-      return res.json({ authtoken: authtoken, msg: "Login Successfull" });
+      return res.json({
+        authtoken: authtoken,
+        user: user,
+        msg: "Login Successfull",
+      });
     } catch (error) {
       console.log(error.message);
       return res.status(500).json({ error: "Internal server Error" });

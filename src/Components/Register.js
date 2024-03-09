@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const BASE_URL = "http://localhost:5000/api/auth";
+  const [userType, setUserType] = useState("");
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
@@ -43,7 +44,7 @@ const Register = () => {
           confirmPassword,
         }),
       });
-
+      console.log("userType = ", userType);
       if (!response.ok) {
         throw new Error("Failed to register");
       }

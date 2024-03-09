@@ -12,16 +12,16 @@ const Navbar = ({ userType }) => {
             </h2>
           </a>
         </div>
-        <div className="flex flex-grow justify-center max-w-sm w-full">
+        <div className="flex flex-grow justify-center max-w-sm md:min-w-[400px]">
           <input
             placeholder="Search"
             type="search"
-            className="p-1 rounded-md outline-none mx-1"
+            className="p-1.5 rounded-md outline-none mx-1 w-full"
           />
           <button
             type="submit"
             variant="outline"
-            className="p-1 bg-amber-400 px-2 rounded-md"
+            className="p-1.5 px-2.5 bg-amber-400 rounded-md"
           >
             <SearchIcon className="h-4 w-4" />
           </button>

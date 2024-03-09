@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const BASE_URL = "http://localhost:5000/api/auth";
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [userType, setUserType] = useState("");
 
   // replacing useHistory hook in v5 with useNavigate
   const navigate = useNavigate();
@@ -28,6 +29,8 @@ const Login = () => {
         // Store token in local storage
         localStorage.setItem("token", json.authtoken);
 
+        console.log("Login User: ", json.user.userType);
+        setUserType(json.user.userType);
         // Redirect based on user type
         redirectToDashboard(json.user.userType);
       } else {
@@ -72,6 +75,7 @@ const Login = () => {
                 onChange={onChange}
                 placeholder="Enter Your Mail"
                 type="email"
+                autoComplete="username"
               />
             </div>
             <div className="space-y-2">
@@ -82,7 +86,7 @@ const Login = () => {
                 type="password"
                 onChange={onChange}
                 value={credentials.password}
-                autocomplete="current-password"
+                autoComplete="current-password"
                 placeholder="Enter Your Password"
               />
             </div>

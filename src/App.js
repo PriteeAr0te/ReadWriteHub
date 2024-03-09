@@ -13,7 +13,7 @@ import Reader from "./Components/Reader";
 import { useState } from "react";
 
 function App() {
-  const [userType, setUserType] = useState("reader");
+  const [userType, setUserType] = useState("");
   return (
     <>
       <BookState>

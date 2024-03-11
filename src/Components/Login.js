@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setUserType }) => {
   const BASE_URL = "http://localhost:5000/api/auth";
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const [userType, setUserType] = useState("");
+  // const [userType, setUserType] = useState("");
 
   // replacing useHistory hook in v5 with useNavigate
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Login = () => {
         }),
       });
       const json = await response.json();
-      console.log("JSON: ", json);
+      // console.log("JSON: ", json);
       if (json.authtoken) {
         // Store token in local storage
         localStorage.setItem("token", json.authtoken);

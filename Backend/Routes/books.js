@@ -28,15 +28,15 @@ router.post(
   ],
   authenticateUser,
   async (req, res) => {
-    console.log(req.body, 49);
-    console.log(req.file, 50);
-    console.log("Auth: ", req.headers.authorization);
+    // console.log(req.body, 49);
+    // console.log(req.file, 50);
+    // console.log("Auth: ", req.headers.authorization);
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      console.log(req.file);
+      // console.log(req.file);
       if (!req.file) {
         return res.status(400).json({ error: "Please upload a file" });
       }
@@ -51,7 +51,7 @@ router.post(
         isPublished,
       } = req.body;
       const imageUrl = req.file.path;
-      console.log("cover: ", imageUrl);
+      // console.log("cover: ", imageUrl);
 
       let book = new Books({
         cover: imageUrl,
@@ -198,7 +198,7 @@ router.get("/fetchallbooks", authenticateUser, async (req, res) => {
   try {
     const books = await Books.find().populate("author", "-_id name");
     res.json(books);
-    console.log("P:", books);
+    // console.log("P:", books);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: false, error: "Internal server error" });

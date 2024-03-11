@@ -18,16 +18,20 @@ function App() {
     <>
       <BookState>
         <BrowserRouter>
+          {/* {userType && <Navbar userType={userType} />} */}
           <Navbar userType={userType} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={<Login setUserType={setUserType} />}
+            />
             <Route path="/verify" element={<VerifyEmail />} />
             <Route path="/author" element={<Author />} />
             <Route path="/reader" element={<Reader />} />
           </Routes>
-          <Footer />
+          <Footer userType={userType} />
         </BrowserRouter>
       </BookState>
     </>

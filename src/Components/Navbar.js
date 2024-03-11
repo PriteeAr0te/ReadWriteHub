@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = ({ userType }) => {
+  useEffect(() => {
+    console.log("UserType= ", userType);
+  }, [userType]);
   return (
     <header className="bg-[#00c2a2] dark:bg-[#065f46]">
       <div className="container flex justify-between h-16 items-center">

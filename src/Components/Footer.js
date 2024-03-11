@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ userType }) => {
   return (
     <footer className="w-full py-6 bg-gray-900">
       <div className="container flex flex-col items-center justify-center gap-4 px-4 text-center md:flex-row md:gap-6 md:px-6 lg:gap-10">
@@ -17,18 +17,27 @@ const Footer = () => {
           >
             Home
           </Link>
-          <Link
-            className="text-sm font-medium text-gray-50 no-underline pr-3 hover:underline dark:text-gray-950 dark:hover:underline"
-            to="/reader"
-          >
-            Reader
-          </Link>
-          <Link
-            className="text-sm font-medium text-gray-50 no-underline pr-3 hover:underline dark:text-gray-950 dark:hover:underline"
-            to="/author"
-          >
-            Author
-          </Link>
+          {userType === "reader" && (
+            <li className="list-none">
+              <Link
+                className="text-sm font-medium text-gray-50 no-underline pr-3 hover:underline dark:text-gray-950 dark:hover:underline"
+                to="/reader"
+              >
+                Reader
+              </Link>
+            </li>
+          )}
+          {userType === "author" && (
+            <li className="list-none">
+              {" "}
+              <Link
+                className="text-sm font-medium text-gray-50 no-underline pr-3 hover:underline dark:text-gray-950 dark:hover:underline"
+                to="/author"
+              >
+                Author
+              </Link>
+            </li>
+          )}
         </nav>
         <div className="flex items-center justify-center gap-4 md:gap-8">
           <a

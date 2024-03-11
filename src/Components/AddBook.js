@@ -12,7 +12,7 @@ const AddBook = () => {
   const [tags, setTags] = useState([]);
   const [isPublished, setIsPublished] = useState([]);
 
-  console.log(image, 12);
+  // console.log(image, 12);
 
   const [error, setError] = useState("");
   const context = useContext(BookContext);
@@ -58,7 +58,7 @@ const AddBook = () => {
 
       if (response && response.data && response.data.book) {
         const imageUrl = response.data.book.cover;
-        console.log("imageUrl: ", imageUrl);
+        // console.log("imageUrl: ", imageUrl);
         alert("New Book Added", "success");
       } else {
         alert("Failed to add book", "error");

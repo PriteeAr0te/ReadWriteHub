@@ -44,7 +44,7 @@ const Register = () => {
           confirmPassword,
         }),
       });
-      console.log("userType = ", userType);
+      // console.log("userType = ", userType);
       if (!response.ok) {
         throw new Error("Failed to register");
       }
@@ -52,7 +52,7 @@ const Register = () => {
       const json = await response.json();
 
       localStorage.setItem("token", json.authtoken);
-      console.log("Registered Successfully");
+      // console.log("Registered Successfully");
       alert(
         "Email sent for verification on your registered email ID. Please verify!"
       );

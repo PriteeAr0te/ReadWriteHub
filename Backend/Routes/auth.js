@@ -65,7 +65,7 @@ const verifyMail = async (req, res) => {
       { _id: req.query.id },
       { $set: { verified: true } }
     );
-    console.log(updateInfo);
+    // console.log(updateInfo);
 
     // Send a response to redirect the user to the desired page accordint to the userType
       if (user.userType === "reader") {
@@ -195,11 +195,11 @@ router.post(
 router.get("/getuser", authenticateUser, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("User ID:", userId);
+    // console.log("User ID:", userId);
 
     // Fetch user details based on userType
     const user = await User.findOne({ _id: userId, userType: req.userType });
-    console.log("User:", user);
+    // console.log("User:", user);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
